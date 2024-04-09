@@ -8,6 +8,8 @@ const shareHoldersModel = require("../../../Models/ShareHolders/shareHoldersMode
 const shareInfoModel = require("../../../Models/ShareHolders/shareInfoModel");
 const getuser = require("../../../validators/authorize.js").getUser;
 const passgen = require("generate-password");
+const PaymentOrder = require("../../../Models/Payment/paymentOrderModel")
+const newPaymentOrder = require("../../../Models/Payment/newPaymentOrderModel");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const hbs = require("handlebars");
@@ -99,14 +101,24 @@ module.exports = {
       shareHolder: shareHolder._id,
       paymentCompleted: true,
     });
-
+    
     dash_data.completedShareInfo = shareInfo;
+    let paymentOrder = await PaymentOrder.find({
+      shareHolder:shareHolder._id,
+     })
+     dash_data.payment_Order = paymentOrder
 
     let currentShareInfo = await shareInfoModel.findOne({
       shareHolder: shareHolder._id,
       paymentCompleted: false,
     });
-    console.log(currentShareInfo);
+
+    let newPaymentOrders = await newPaymentOrder.findOne({
+      shareHolder: shareHolder._id,
+
+    })
+    dash_data.newPayment_Order = newPaymentOrders
+    //console.log(currentShareInfo);
     dash_data.currentShareInfo = currentShareInfo;
     let shareTotal = await shareInfoModel.aggregate([
       {

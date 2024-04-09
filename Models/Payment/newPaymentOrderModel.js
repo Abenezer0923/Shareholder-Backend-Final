@@ -1,7 +1,7 @@
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
-var paymentOrderSchema = new Schema({
+var newPaymentOrderSchema = new Schema({
   bill_ref_number: String,
   paymentMethod: String,
   phoneNumber: String,
@@ -13,16 +13,16 @@ var paymentOrderSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "shareHolder",
   },
-  payment: {
-    type: Schema.Types.ObjectId,
-    ref: "payment",
-  },
+//   payment: {
+//     type: Schema.Types.ObjectId,
+//     ref: "payment",
+//   },
   amount: Number,
   shareCatagory: String,
   percentage: String,
-  completed: Boolean,
+//   completed: Boolean,
   image: String 
 });
-paymentOrderSchema.set("timestamps", true);
+newPaymentOrderSchema.set("timestamps", true);
 
-module.exports = mongoose.model("paymentOrder", paymentOrderSchema);
+module.exports = mongoose.model("newPaymentOrder", newPaymentOrderSchema);

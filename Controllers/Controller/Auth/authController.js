@@ -553,11 +553,15 @@ module.exports = {
 
   },
   restPasswordByEmail: async function (req, res) {
-    const { id, token } = req.params;
+    const { token } = req.params;
     const { previousPassword, newPassword } = req.body;
   
     try {
       // Check if newPassword is provided
+      const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+      const id =  decodedToken.userID;
+      console.log("theiiiiiiiii", id)
+      console.log("abennnnn", decodedToken);
       if (!newPassword || typeof newPassword !== 'string') {
         return res.status(400).json({
           success: false,

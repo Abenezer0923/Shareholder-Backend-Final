@@ -1,4 +1,5 @@
 const PaymentOrder = require("../../../Models/Payment/paymentOrderModel");
+const newPaymentOrder = require("../../../Models/Payment/newPaymentOrderModel");
 const Payment = require("../../../Models/Payment/paymentModel");
 const ShareHolder = require('../../../Models/ShareHolders/shareHoldersModel');
 const PaymentHistory = require("../../../Models/Payment/paymentHistoryModel");
@@ -38,15 +39,14 @@ const uploadImage = (req, res, next) => {
 // Function to add payment history
 const addPaymentHistory = (req, res) => {
   // Retrieve necessary data from request body
-  const { shareCatagory,acc_No, percentage, amount, paymentMethod, payment_id, amount_birr, shareHolder_id, paymentStatus } = req.body;
+  const { shareCatagory,acc_No, percentage, amount, paymentMethod, amount_birr, shareHolder_id, paymentStatus } = req.body;
 
   // Create a new payment history object
-  const newPaymentHistory = new PaymentOrder({
+  const newPaymentHistory = new newPaymentOrder({
     acc_No:acc_No,
     paidAmount: amount,
     percentage: percentage,
     amount_birr: amount_birr,
-    payment: payment_id, //payment_id is the ObjectId of the related payment record
     paymentMethod: paymentMethod,
     shareHolder: shareHolder_id,
     paymentStatus:paymentStatus,

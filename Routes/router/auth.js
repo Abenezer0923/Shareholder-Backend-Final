@@ -6,7 +6,7 @@ router.post("/login", controller.authController.login);
 router.post("/verifyOTP", controller.authController.verifyOtp);
 router.post("/forgotPassword", controller.authController.forgotpassword);
 router.post("/updatePassword", controller.authController.updatePasswordLink);
-router.post("/updatePassword/:id/:token", controller.authController.restPasswordByEmail);
+router.post("/updatePassword/:token", controller.authController.restPasswordByEmail);
 router.post("/verifyToken", controller.authController.verifypasswordresettoken);
 router.post("/resetPassword/:id/:token", controller.authController.restPassword);
 
