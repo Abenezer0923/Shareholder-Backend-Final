@@ -1,7 +1,15 @@
-const telebirrPay = (req, res) => {
+const axios = require('axios')
+
+const home = (req,res) => {
+    res.status(200).json({data:"integrating"})
+}
+
+const telebirr_pay = (req, res) => {
     try {
         // Purposebalck Telebirr Integration API
         // const pbe_telebirr_api = process.env.PBE_TELEBIRR_API;
+        const tranx_id= "KAPS_5498787939276"; 
+
         const pbe_telebirr_api = "https://telebirr.purposeblacketh.com/";
         // const notify_url = process.env.KAPS_TELEBIRR_NOTIFY_URL;
     
@@ -15,10 +23,11 @@ const telebirrPay = (req, res) => {
         //   tranx_id,
         //   return_url,
         // };
+        
         const new_data = {
             subject:"share",
             amount:12,
-            tranx_id:"KAPS_543566576",
+            tranx_id,
             return_url,
           };
         // Sending a post request to the api endpoint
@@ -39,6 +48,16 @@ const telebirrPay = (req, res) => {
       }
 }
 
+
+const telebirr_success = (req,res) => {
+    // Do telebirr  success logic here
+}
+
+const telebirr_notifier = (req,res) => {
+    // Do telebirr notify logic here
+}
+
+
 module.exports = {
-    telebirrPay
+    telebirr_pay,home
 }

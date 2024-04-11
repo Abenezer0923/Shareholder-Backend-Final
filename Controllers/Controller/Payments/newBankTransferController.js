@@ -1,5 +1,5 @@
 const PaymentOrder = require("../../../Models/Payment/paymentOrderModel");
-const newPaymentOrder = require("../../../Models/Payment/newPaymentOrderModel");
+const newPaymentOrder = require("../../../Models/Payment/paymentOrderModel");
 const Payment = require("../../../Models/Payment/paymentModel");
 const ShareHolder = require('../../../Models/ShareHolders/shareHoldersModel');
 const PaymentHistory = require("../../../Models/Payment/paymentHistoryModel");

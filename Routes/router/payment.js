@@ -9,5 +9,8 @@ router.post("/bankPayment",
   controller.paymentController.addPaymentHistory,
   
 );
+// router.post("/telebirrPayment",
+// controller.telebirrPayment);
 
 module.exports = router;
+

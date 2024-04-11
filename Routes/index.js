@@ -5,11 +5,17 @@ const shareHolder_route = require("./router/shareHolder");
 const newPayment = require("./router/newPayment");
 const auth_route = require("./router/auth");
 const upload_route = require("./router/payment")
+const telebirrPay = require('./router/telbirrPayment')
+
+const paymentController = require('../Controllers/payment.controller')
+
 
 router.use("/shareHolder", shareHolder_route);
 router.use("/auth", auth_route);
 router.use("/newPayment", newPayment);
 router.use("/orderPayment", upload_route);
+router.use("/payment/telebirr/pay", paymentController.telebirr_pay);
+router.use("/payment/telebirr/home", paymentController.home);
 
 
 
