@@ -7,14 +7,14 @@ const  jwt =require("jsonwebtoken");
 // access public
 const registeUser=asyncHandler (async(req,res)=>{
     try {
-    const {phone, email, password}=req.body;
+    const {phone, email, password,role}=req.body;
     const user=await User.findOne({email:email});
     if(user){
         console.log("user alredy exist");
     }
-    const hashedPassword =bcrypt.hashSync(password,10); 
+  const hashedPassword =bcrypt.hashSync(password,10); 
    const saveUser=new User({
-    phone, email, password :hashedPassword
+    phone, email, role,password :hashedPassword
    });
    const newUser= await saveUser.save();
     const token=jwt.sign({
