@@ -3,18 +3,27 @@ const router = express.Router();
 
 const shareHolder_route = require("./router/shareHolder");
 const adminShareholder=require("./router/adminRoute");
-const auth_route = require("./router/auth");
 // const validateToken=require('../middleware/validateTokenHandler');
+const newPayment = require("./router/newPayment");
+const auth_route = require("./router/auth");
+const upload_route = require("./router/payment")
+const telebirrPay = require('./router/telbirrPayment')
 
-router.use("/shareHolder", shareHolder_route);
-router.use("/auth", auth_route);
+const paymentController = require('../Controllers/payment.controller')
+
 
 // Admin Dashboard Routes
 router.use("/admin/dashboard",adminShareholder);
 
+
+router.use("/shareHolder", shareHolder_route);
+router.use("/auth", auth_route);
+router.use("/newPayment", newPayment);
+router.use("/orderPayment", upload_route);
+router.use("/payment/telebirr/pay", paymentController.telebirr_pay);
+router.use("/payment/telebirr/home", paymentController.home);
+
+
+
 module.exports = router;
-
-
-
-
 

@@ -7,9 +7,7 @@ var paymentOrderSchema = new Schema({
   bill_ref_number: String,
   paymentMethod: String,
   phoneNumber: String,
-  acc_No:String,
-  // amount_birr: String,
-  
+  acc_No:String,  
   paymentStatus: String,
 
   shareHolder: {
@@ -28,6 +26,7 @@ var paymentOrderSchema = new Schema({
   amount: Number,
   shareCatagory: String,
   shareType:String,
+
   percentage: String,
   completed: Boolean,
   image: String 

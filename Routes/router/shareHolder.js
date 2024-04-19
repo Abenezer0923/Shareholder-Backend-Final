@@ -15,4 +15,6 @@ router.get(
 router.post("/migration", controller.shareHolderController.migrateData);
 router.post("/createUser", controller.shareHolderController.createUser);
 
+router.post("/addPayment", controller.paymentController.addPaymentHistory);
+
 module.exports = router;

@@ -11,6 +11,9 @@ const fs = require("fs");
 const getuser = require("../../../validators/authorize.js").getUser;
 const Sniffr = require("sniffr");
 var { decrypt } = require("@rlvt/crypt");
+const crypto = require("crypto");
+const ted = require("@rlvt/crypt");
+
 const shareHoldersModel = require("../../../Models/ShareHolders/shareHoldersModel.js");
 
 const hashPasword = async (password) => {
@@ -39,15 +42,12 @@ const PB_email = process.env.SENDER_GMAIL_ADDRESS;
 const pass = process.env.SENDER_GMAIL_PASSWORD;
 
 const email_info = nodemailer.createTransport({
-  host: "mail.purposeblack.et",
+  host: "smtp.gmail.com",
   port: 465,
   secure: true,
   auth: {
-    user: PB_email,
-    pass: pass,
-  },
-  tls: {
-    rejectUnauthorized: false,
+    user: "abnew0923@gmail.com", // Use your Gmail email address
+    pass: "mrfewpltrafipslo", // Use your Gmail password
   },
 });
 
@@ -202,159 +202,195 @@ module.exports = {
     }
   },
 
+  // forgotpassword: async function (req, res) {
+  //   const email = req.body.email.toLowerCase();
+  //   //console.log(email);
+
+  //   let user = await userModel.findOne({ email: email });
+
+  //   if (!user) {
+  //     return res.status(200).json({
+  //       success: false,
+  //       message: "Email not found!",
+  //     });
+  //   }
+
+  //   const data = {
+  //     email: email,
+  //     id: user._id,
+  //   };
+
+  //   let forgotpassword_check = await forgotpasswordModel.findOne({
+  //     $and: [{ user: user.id }, { done: false }],
+  //   });
+
+  //   //console.log(forgotpassword_check);
+
+  //   if (!forgotpassword_check) {
+  //     const random_key = crypto.randomBytes(32).toString("hex");
+  //     const key = random_key + user.password;
+  //     const hashed_key = crypto.createHash("sha256").update(key).digest("hex");
+
+  //     const token = jwt.sign(data, hashed_key, { expiresIn: "30m" });
+  //     const encryptedToken = ted.encrypt(token);
+
+  //     var forgotpassword = new forgotpasswordModel({
+  //       email: email,
+  //       token: hashed_key,
+  //       done: false,
+  //       user: user._id,
+  //     });
+
+  //     try {
+  //       readHTMLFile(filePath, function (err, html) {
+  //         ////console.log(err)
+  //         const template = hbs.compile(html);
+  //         const replacements = {
+  //           link: `https://user.purposeblacketh.com//user/reset-password?id=${user._id}&token=${encryptedToken}`,
+  //           name: user.first_name,
+  //         };
+  //         const htmlToSend = template(replacements);
+  //         const emails = {
+  //           from: PB_email,
+  //           //cc: "purposeblackethiopia@gmail.com",
+  //           to: email,
+  //           subject: "PurposeBlack ETH user password reset",
+  //           html: htmlToSend,
+  //         };
+  //         email_info.sendMail(emails, (error, info) => {
+  //           if (error) {
+  //             console.log("email not send" + error);
+  //             return res
+  //               .status(200)
+  //               .json({ success: false, message: "Email not send" });
+  //           } else {
+  //             forgotpassword.save(function (err, user) {
+  //               if (err) {
+  //                 return res.status(500).json({
+  //                   message: "Error when updating password.",
+  //                   error: err,
+  //                 });
+  //               }
+  //               //console.log("email sent", info);
+
+  //               return res.status(200).json({
+  //                 success: true,
+  //                 message: "email sent!",
+  //               });
+  //             });
+  //           }
+  //         });
+  //       });
+  //     } catch (error) {
+  //       return res.json({
+  //         success: false,
+  //         message: "email not sent!",
+  //       });
+  //     }
+  //   } else {
+  //     //console.log("somthing");
+  //     forgotpassword_check.done = true;
+  //     forgotpassword_check.save((err, forgot) => {
+  //       const random_key = crypto.randomBytes(32).toString("hex");
+  //       const key = random_key + user.password;
+  //       const hashed_key = crypto
+  //         .createHash("sha256")
+  //         .update(key)
+  //         .digest("hex");
+
+  //       const token = jwt.sign(data, hashed_key, { expiresIn: "30m" });
+  //       const encryptedToken = ted.encrypt(token);
+
+  //       var forgotpassword = new forgotpasswordModel({
+  //         email: email,
+  //         token: hashed_key,
+  //         done: false,
+  //         user: user._id,
+  //       });
+
+  //       try {
+  //         readHTMLFile(filePath, function (err, html) {
+  //           ////console.log(err)
+  //           const template = hbs.compile(html);
+  //           const replacements = {
+  //             link: `${process.env.PUBLIC_URL}/user/reset-password?id=${user._id}&token=${encryptedToken}`,
+  //             name: user.first_name,
+  //           };
+  //           const htmlToSend = template(replacements);
+  //           const emails = {
+  //             from: PB_email,
+  //             cc: "purposeblackethiopia@gmail.com",
+  //             to: email,
+  //             subject: "PurposeBlack ETH user password reset",
+  //             html: htmlToSend,
+  //           };
+  //           email_info.sendMail(emails, (error, info) => {
+  //             if (error) {
+  //               //console.log("email not send" + error);
+  //             } else {
+  //               forgotpassword.save(function (err, user) {
+  //                 if (err) {
+  //                   return res.status(500).json({
+  //                     message: "Error when updating password.",
+  //                     error: err,
+  //                   });
+  //                 }
+  //                 //console.log("email sent", info);
+
+  //                 return res.status(200).json({
+  //                   success: true,
+  //                   message: "email sent!",
+  //                 });
+  //               });
+  //             }
+  //           });
+  //         });
+  //       } catch (error) {
+  //         return res.json({
+  //           success: false,
+  //           message: "email not sent!",
+  //         });
+  //       }
+  //     });
+  //   }
+  // },
+
   forgotpassword: async function (req, res) {
-    const email = req.body.email.toLowerCase();
-    //console.log(email);
-
-    let user = await userModel.findOne({ email: email });
-
-    if (!user) {
-      return res.status(200).json({
-        success: false,
-        message: "Email not found!",
-      });
-    }
-
-    const data = {
-      email: email,
-      id: user._id,
-    };
-
-    let forgotpassword_check = await forgotpasswordModel.findOne({
-      $and: [{ user: user.id }, { done: false }],
-    });
-
-    //console.log(forgotpassword_check);
-
-    if (!forgotpassword_check) {
-      const random_key = crypto.randomBytes(32).toString("hex");
-      const key = random_key + user.password;
-      const hashed_key = crypto.createHash("sha256").update(key).digest("hex");
-
-      const token = jwt.sign(data, hashed_key, { expiresIn: "30m" });
-      const encryptedToken = ted.encrypt(token);
-
-      var forgotpassword = new forgotpasswordModel({
-        email: email,
-        token: hashed_key,
-        done: false,
-        user: user._id,
-      });
-
-      try {
-        readHTMLFile(filePath, function (err, html) {
-          ////console.log(err)
-          const template = hbs.compile(html);
-          const replacements = {
-            link: `https://user.purposeblacketh.com//user/reset-password?id=${user._id}&token=${encryptedToken}`,
-            name: user.first_name,
-          };
-          const htmlToSend = template(replacements);
-          const emails = {
-            from: PB_email,
-            cc: "purposeblackethiopia@gmail.com",
-            to: email,
-            subject: "PurposeBlack ETH user password reset",
-            html: htmlToSend,
-          };
-          email_info.sendMail(emails, (error, info) => {
-            if (error) {
-              console.log("email not send" + error);
-              return res
-                .status(200)
-                .json({ success: false, message: "Email not send" });
-            } else {
-              forgotpassword.save(function (err, user) {
-                if (err) {
-                  return res.status(500).json({
-                    message: "Error when updating password.",
-                    error: err,
-                  });
-                }
-                //console.log("email sent", info);
-
-                return res.status(200).json({
-                  success: true,
-                  message: "email sent!",
-                });
-              });
-            }
-          });
-        });
-      } catch (error) {
-        return res.json({
-          success: false,
-          message: "email not sent!",
-        });
+    const { email } = req.body;
+    userModel.findOne({ email: email }).then((user) => {
+      if (!user) {
+        return res.send({ status: "User is not found" });
       }
-    } else {
-      //console.log("somthing");
-      forgotpassword_check.done = true;
-      forgotpassword_check.save((err, forgot) => {
-        const random_key = crypto.randomBytes(32).toString("hex");
-        const key = random_key + user.password;
-        const hashed_key = crypto
-          .createHash("sha256")
-          .update(key)
-          .digest("hex");
+      const token = jwt.sign({ id: user._id }, "jwt_secret_key", {
+        expiresIn: "1d",
+      });
 
-        const token = jwt.sign(data, hashed_key, { expiresIn: "30m" });
-        const encryptedToken = ted.encrypt(token);
+      var transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: true,
+        auth: {
+          user: "abnew0923@gmail.com", // Use your Gmail email address
+          pass: "mrfewpltrafipslo", // Use your Gmail password
+        },
+      });
 
-        var forgotpassword = new forgotpasswordModel({
-          email: email,
-          token: hashed_key,
-          done: false,
-          user: user._id,
-        });
+      var mailOptions = {
+        from: PB_email,
+        to: user.email,
+        subject: "Reset Password Link",
+        text: `http://localhost:3000/auth/resetPassword/${user._id}/${token}`,
+      };
 
-        try {
-          readHTMLFile(filePath, function (err, html) {
-            ////console.log(err)
-            const template = hbs.compile(html);
-            const replacements = {
-              link: `${process.env.PUBLIC_URL}/user/reset-password?id=${user._id}&token=${encryptedToken}`,
-              name: user.first_name,
-            };
-            const htmlToSend = template(replacements);
-            const emails = {
-              from: PB_email,
-              cc: "purposeblackethiopia@gmail.com",
-              to: email,
-              subject: "PurposeBlack ETH user password reset",
-              html: htmlToSend,
-            };
-            email_info.sendMail(emails, (error, info) => {
-              if (error) {
-                //console.log("email not send" + error);
-              } else {
-                forgotpassword.save(function (err, user) {
-                  if (err) {
-                    return res.status(500).json({
-                      message: "Error when updating password.",
-                      error: err,
-                    });
-                  }
-                  //console.log("email sent", info);
-
-                  return res.status(200).json({
-                    success: true,
-                    message: "email sent!",
-                  });
-                });
-              }
-            });
-          });
-        } catch (error) {
-          return res.json({
-            success: false,
-            message: "email not sent!",
-          });
+      transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+          console.log(error);
+        } else {
+          return res.send({ Status: "Success" });
         }
       });
-    }
+    });
   },
-
   verifypasswordresettoken: async function (req, res) {
     const id = req.body.id;
     const token = req.body.token;
@@ -403,55 +439,173 @@ module.exports = {
     }
   },
 
-  resetPassword: async function (req, res) {
-    const id = req.body.id;
-    const token = req.body.token;
-    const password = req.body.password;
-    let user = await userModel.findOne({ _id: id });
-    let forgotpassword = await forgotpasswordModel.findOne({
-      $and: [{ user: id }, { done: false }],
+  // resetPassword: async function (req, res) {
+  //   const id = req.body.id;
+  //   const token = req.body.token;
+  //   const password = req.body.password;
+  //   let user = await userModel.findOne({ _id: id });
+  //   let forgotpassword = await forgotpasswordModel.findOne({
+  //     $and: [{ user: id }, { done: false }],
+  //   });
+  //   if (!user) {
+  //     return res.status(404).json({
+  //       success: false,
+  //       message: "user not found!",
+  //     });
+  //   }
+  //   const decryptedToken = ted.decrypt(token);
+  //   try {
+  //     const verifyToken = jwt.verify(decryptedToken, forgotpassword.token);
+  //     const hashed_password = await hashPasword(password);
+  //     user.password = password ? hashed_password : user.password;
+  //     user.save(function (err, user) {
+  //       if (err) {
+  //         //console.log(err);
+  //         return res.status(500).json({
+  //           success: false,
+  //           message: "Password reset failed! user",
+  //         });
+  //       }
+  //       forgotpassword.token = "Password changed";
+  //       forgotpassword.done = true;
+  //       forgotpassword.save((err, forgotpassword) => {
+  //         if (err) {
+  //           //console.log(err);
+  //           return res.status(500).json({
+  //             success: false,
+  //             message: "Password reset failed! forgot",
+  //           });
+  //         }
+  //         return res.status(200).json({
+  //           success: true,
+  //           message: "Password reseted!",
+  //         });
+  //       });
+  //     });
+  //   } catch (e) {
+  //     //console.log(e);
+  //     return res.status(500).json({
+  //       success: false,
+  //       message: "token invalid or link expierd",
+  //     });
+  //   }
+  // },
+  restPassword: async function (req, res) {
+    const { id, token } = req.params;
+    const { password } = req.body;
+    console.log("the password is", password)
+    jwt.verify(token, "jwt_secret_key", (err, decoded) => {
+      if (err) {
+        return res.json({ Status: "Error with token" });
+      } else {
+        bcrypt
+          .hash(password, 10)
+          .then((hash) => {
+            userModel.findByIdAndUpdate({ _id: id }, { password: hash })
+              .then((u) => res.send({ Status: "Success" }))
+              .catch((err) => res.send({ Status: err }));
+          })
+          .catch((err) => res.send({ Status: err }));
+      }
     });
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "user not found!",
+  },
+
+  updatePasswordLink: async function (req, res) {
+    const { email } = req.body;
+
+    userModel.findOne({ email: email }).then(async (user) => {
+      if (!user) {
+        return res.send({ status: "User is not found" });
+      }
+
+      
+      const token = jwt.sign({ id: user._id }, "jwt_secret_key", {
+        expiresIn: "1d",
       });
-    }
-    const decryptedToken = ted.decrypt(token);
-    try {
-      const verifyToken = jwt.verify(decryptedToken, forgotpassword.token);
-      const hashed_password = await hashPasword(password);
-      user.password = password ? hashed_password : user.password;
-      user.save(function (err, user) {
-        if (err) {
-          //console.log(err);
-          return res.status(500).json({
-            success: false,
-            message: "Password reset failed! user",
-          });
+
+      var transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: true,
+        auth: {
+          user: "abnew0923@gmail.com", // Use your Gmail email address
+          pass: "mrfewpltrafipslo", // Use your Gmail password
+        },
+      });
+
+      
+
+      var mailOptions = {
+        from: PB_email,
+        to: user.email,
+        subject: "Reset Password Link",
+        text: `http://localhost:3000/auth/updatePassword/${user._id}/${token}`,
+      };
+
+      transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+          console.log(error);
+        } else {
+          return res.send({ Status: "Success" });
         }
-        forgotpassword.token = "Password changed";
-        forgotpassword.done = true;
-        forgotpassword.save((err, forgotpassword) => {
-          if (err) {
-            //console.log(err);
-            return res.status(500).json({
-              success: false,
-              message: "Password reset failed! forgot",
-            });
-          }
-          return res.status(200).json({
-            success: true,
-            message: "Password reseted!",
-          });
-        });
       });
-    } catch (e) {
-      //console.log(e);
+    });
+
+  },
+  restPasswordByEmail: async function (req, res) {
+    const { token } = req.params;
+    const { previousPassword, newPassword } = req.body;
+  
+    try {
+      // Check if newPassword is provided
+      const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+      const id =  decodedToken.userID;
+      console.log("theiiiiiiiii", id)
+      console.log("abennnnn", decodedToken);
+      if (!newPassword || typeof newPassword !== 'string') {
+        return res.status(400).json({
+          success: false,
+          message: "New password is missing or invalid",
+        });
+      }
+      
+      // Find the user
+      let user = await userModel.findOne({ _id: id });
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: "User not found!",
+        });
+      }
+  
+      // Verify if the previous password matches
+      const isMatch = await bcrypt.compare(previousPassword, user.password);
+      if (!isMatch) {
+        return res.status(400).json({
+          success: false,
+          message: "Previous password is incorrect",
+        });
+      }
+  
+      // Hash the new password
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+  
+      // Update user's password
+      user.password = hashedPassword;
+      await user.save();
+  
+      return res.status(200).json({
+        success: true,
+        message: "Password reset successful",
+      });
+    } catch (error) {
+      console.error("Error resetting password:", error);
       return res.status(500).json({
         success: false,
-        message: "token invalid or link expierd",
+        message: "Password reset failed",
       });
     }
-  },
+  }
+
+  
 };
